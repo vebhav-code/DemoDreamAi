@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Careers - DemoDream</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="dropdown.css" />
+  <link rel="stylesheet" href="career-modern.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="gate.js"></script>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">DemoDream</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="career.html">Careers</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+
+  <!-- Hero Section -->
+  <section class="career-hero">
+    <h1>Build Your Future With Us</h1>
+    <p>Discover roles that match your passion. Experience your dream career before you commit.</p>
+  </section>
+
+  <!-- Search Section -->
+  <div class="search-wrapper">
+    <div class="search-icon">🔍</div>
+    <input type="text" id="careerSearch" class="modern-search"
+      placeholder="Search for roles (e.g. Engineer, Pilot, Artist)..." />
+
+    <!-- Fallback Box -->
+    <div id="searchTestBox"
+      style="display:none; margin-top: 20px; text-align: center; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 16px; backdrop-filter: blur(10px);">
+      <p style="color: #6366f1; font-weight: 600;">No match found in current openings?</p>
+      <button id="searchTestBtn" class="auth-btn" style="padding: 10px 20px; border-radius: 20px;">
+        Generate Custom Career Path for "<span id="searchQuery"></span>"
+      </button>
+    </div>
+  </div>
+
+  <!-- Careers Grid -->
+  <div class="careers-container">
+    <div id="careersGrid">
+
+      <!-- Engineer -->
+      <div class="career-card" data-career="Engineer">
+        <div class="card-header">
+          <div class="icon-box">👷</div>
+          <span class="status-badge">High Demand</span>
+        </div>
+        <h2 class="career-title">Engineer</h2>
+        <div class="location-text">📍 Global • Tech Sector</div>
+        <div class="tags-container">
+          <span class="job-tag">Innovation</span>
+          <span class="job-tag">Math</span>
+          <span class="job-tag">Problem Solving</span>
+        </div>
+        <p class="career-desc">Solve real-world problems using math, creativity, and technology.</p>
+        <button class="start-btn" onclick="startTest('Engineer')">Apply Now</button>
+      </div>
+
+      <!-- Doctor -->
+      <div class="career-card" data-career="Doctor">
+        <div class="card-header">
+          <div class="icon-box">🩺</div>
+          <span class="status-badge">Essential</span>
+        </div>
+        <h2 class="career-title">Doctor</h2>
+        <div class="location-text">📍 Hospitals & Clinics</div>
+        <div class="tags-container">
+          <span class="job-tag">Healthcare</span>
+          <span class="job-tag">Biology</span>
+          <span class="job-tag">Empathy</span>
+        </div>
+        <p class="career-desc">Diagnose, treat, and care for patients while improving health.</p>
+        <button class="start-btn" onclick="startTest('Doctor')">Apply Now</button>
+      </div>
+
+      <!-- Lawyer -->
+      <div class="career-card" data-career="Lawyer">
+        <div class="card-header">
+          <div class="icon-box">⚖️</div>
+          <span class="status-badge">Prestigious</span>
+        </div>
+        <h2 class="career-title">Lawyer</h2>
+        <div class="location-text">📍 Law Firms • Corporate</div>
+        <div class="tags-container">
+          <span class="job-tag">Justice</span>
+          <span class="job-tag">Debate</span>
+          <span class="job-tag">Critical Thinking</span>
+        </div>
+        <p class="career-desc">Help solve legal issues and ensure justice is served.</p>
+        <button class="start-btn" onclick="startTest('Lawyer')">Apply Now</button>
+      </div>
+
+      <!-- Scientist -->
+      <div class="career-card" data-career="Scientist">
+        <div class="card-header">
+          <div class="icon-box">🧪</div>
+          <span class="status-badge">Research</span>
+        </div>
+        <h2 class="career-title">Scientist</h2>
+        <div class="location-text">📍 Labs • Universities</div>
+        <div class="tags-container">
+          <span class="job-tag">Discovery</span>
+          <span class="job-tag">Analysis</span>
+          <span class="job-tag">Innovation</span>
+        </div>
+        <p class="career-desc">Research and create new knowledge for the world.</p>
+        <button class="start-btn" onclick="startTest('Scientist')">Apply Now</button>
+      </div>
+
+      <!-- Teacher -->
+      <div class="career-card" data-career="Teacher">
+        <div class="card-header">
+          <div class="icon-box">🎓</div>
+          <span class="status-badge">Impactful</span>
+        </div>
+        <h2 class="career-title">Teacher</h2>
+        <div class="location-text">📍 Schools • Education</div>
+        <div class="tags-container">
+          <span class="job-tag">Mentorship</span>
+          <span class="job-tag">Communication</span>
+          <span class="job-tag">Patience</span>
+        </div>
+        <p class="career-desc">Guide and educate students, shaping future generations.</p>
+        <button class="start-btn" onclick="startTest('Teacher')">Apply Now</button>
+      </div>
+
+      <!-- Pilot -->
+      <div class="career-card" data-career="Pilot">
+        <div class="card-header">
+          <div class="icon-box">✈️</div>
+          <span class="status-badge">Dynamic</span>
+        </div>
+        <h2 class="career-title">Pilot</h2>
+        <div class="location-text">📍 Global Travel</div>
+        <div class="tags-container">
+          <span class="job-tag">Aviation</span>
+          <span class="job-tag">Travel</span>
+          <span class="job-tag">Technology</span>
+        </div>
+        <p class="career-desc">Fly aircraft and ensure safe travel across the world.</p>
+        <button class="start-btn" onclick="startTest('Pilot')">Apply Now</button>
+      </div>
+
+      <!-- Artist -->
+      <div class="career-card" data-career="Artist">
+        <div class="card-header">
+          <div class="icon-box">🎨</div>
+          <span class="status-badge">Creative</span>
+        </div>
+        <h2 class="career-title">Artist</h2>
+        <div class="location-text">📍 Studio • Remote</div>
+        <div class="tags-container">
+          <span class="job-tag">Expression</span>
+          <span class="job-tag">Visuals</span>
+          <span class="job-tag">Design</span>
+        </div>
+        <p class="career-desc">Create visual or performance works expressing ideas and emotion.</p>
+        <button class="start-btn" onclick="startTest('Artist')">Apply Now</button>
+      </div>
+
+      <!-- Astronaut -->
+      <div class="career-card" data-career="Astronaut">
+        <div class="card-header">
+          <div class="icon-box">🚀</div>
+          <span class="status-badge">Elite</span>
+        </div>
+        <h2 class="career-title">Astronaut</h2>
+        <div class="location-text">📍 Space Stations</div>
+        <div class="tags-container">
+          <span class="job-tag">Exploration</span>
+          <span class="job-tag">Fitness</span>
+          <span class="job-tag">STEM</span>
+        </div>
+        <p class="career-desc">Explore space, conduct research, and push human boundaries.</p>
+        <button class="start-btn" onclick="startTest('Astronaut')">Apply Now</button>
+      </div>
+
+      <!-- Chef -->
+      <div class="career-card" data-career="Chef">
+        <div class="card-header">
+          <div class="icon-box">👨‍🍳</div>
+          <span class="status-badge">Passionate</span>
+        </div>
+        <h2 class="career-title">Chef</h2>
+        <div class="location-text">📍 Restaurants • Hotels</div>
+        <div class="tags-container">
+          <span class="job-tag">Culinary</span>
+          <span class="job-tag">Taste</span>
+          <span class="job-tag">Creativity</span>
+        </div>
+        <p class="career-desc">Create delicious meals and innovate in the culinary arts.</p>
+        <button class="start-btn" onclick="startTest('Chef')">Apply Now</button>
+      </div>
+
+      <!-- Designer -->
+      <div class="career-card" data-career="Designer">
+        <div class="card-header">
+          <div class="icon-box">🖌️</div>
+          <span class="status-badge">Modern</span>
+        </div>
+        <h2 class="career-title">Designer</h2>
+        <div class="location-text">📍 Remote • Agencies</div>
+        <div class="tags-container">
+          <span class="job-tag">UI/UX</span>
+          <span class="job-tag">Graphics</span>
+          <span class="job-tag">Digital</span>
+        </div>
+        <p class="career-desc">Create visual solutions, from graphics to fashion to interiors.</p>
+        <button class="start-btn" onclick="startTest('Designer')">Apply Now</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="career.js"></script>
+  <script src="StreamVideo.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,245 @@
+/* ========================================= */
+/*           USER PROFILE DROPDOWN           */
+/* ========================================= */
+
+.profile-dropdown-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.profile-trigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 5px;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+}
+
+.dropdown-arrow {
+    font-size: 0.8rem;
+    color: #4b5563;
+    transition: transform 0.2s;
+}
+
+.profile-dropdown-container.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu Box */
+.profile-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 300px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    padding: 24px;
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    animation: slideDown 0.2s ease-out;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.profile-dropdown-container.active .profile-menu {
+    display: flex;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Menu Header */
+.menu-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.menu-avatar-large {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e0e7ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #4f46e5;
+}
+
+.menu-user-info h4 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.menu-user-info p {
+    margin: 2px 0 0;
+    font-size: 0.8rem;
+    color: #6b7280;
+    word-break: break-all;
+}
+
+/* Stats Row */
+.stats-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    flex: 1;
+    background: #f3f4f6;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.stat-icon {
+    font-size: 1.1rem;
+}
+
+.stat-purple {
+    color: #8b5cf6;
+    background: #f5f3ff;
+}
+
+.stat-blue {
+    color: #3b82f6;
+    background: #eff6ff;
+}
+
+/* Menu List */
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #374151;
+    font-weight: 500;
+}
+
+.menu-item:hover {
+    background: #f9fafb;
+}
+
+.menu-item-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    color: #6366f1;
+    transition: all 0.2s;
+}
+
+.menu-item:hover .menu-item-icon {
+    background: #6366f1;
+    color: #fff;
+    border-color: #6366f1;
+}
+
+.menu-item.logout {
+    margin-top: 10px;
+    color: #ef4444;
+}
+
+.menu-item.logout:hover {
+    background: #fef2f2;
+}
+
+.menu-item.logout .menu-item-icon {
+    color: #ef4444;
+    border-color: #fecaca;
+}
+
+.menu-item.logout:hover .menu-item-icon {
+    background: #ef4444;
+    color: white;
+}
+
+/* Dark Mode Overrides for Dropdown */
+body.dark-mode .profile-menu {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+body.dark-mode .menu-user-info h4 {
+    color: #f3f4f6;
+}
+
+body.dark-mode .menu-user-info p {
+    color: #94a3b8;
+}
+
+body.dark-mode .stat-box {
+    background: #0f172a;
+    color: #cbd5e1;
+}
+
+body.dark-mode .menu-item {
+    color: #e2e8f0;
+}
+
+body.dark-mode .menu-item:hover {
+    background: #334155;
+}
+
+body.dark-mode .menu-item-icon {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+body.dark-mode .menu-item.logout:hover {
+    background: rgba(239, 68, 68, 0.1);
+}

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Result | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dropdown.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="gate.js"></script>
+</head>
+
+<body class="quiz-body">
+
+    <header class="quiz-header">
+        <div class="quiz-header-inner">
+            <div class="logo">DemoDream</div>
+            <nav class="quiz-nav">
+                <a href="index.html">Home</a>
+                <a href="career.html">Careers</a>
+                <a href="profile.html">Profile</a>
+            </nav>
+        </div>
+        <div class="header-gradient"></div>
+    </header>
+
+    <main class="quiz-main">
+        <section class="result-container"
+            style="text-align: center; max-width: 800px; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);">
+
+            <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: #f3f4f6;">Test Results</h1>
+            <h2 id="careerName" style="color: #6366f1; margin-bottom: 30px;">Career Name</h2>
+
+            <div class="score-circle">
+                <span id="scoreValue">0%</span>
+            </div>
+
+            <div id="badgeContainer" style="margin: 20px 0;">
+                <!-- Badge inserted by JS -->
+            </div>
+
+            <div class="feedback-box"
+                style="background: rgba(0,0,0,0.2); padding: 25px; border-radius: 15px; margin: 30px 0; text-align: left;">
+                <h3
+                    style="color: #f3f4f6; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+                    Analysis & Suggestions</h3>
+                <p id="feedbackText" style="color: #d1d5db; line-height: 1.6; font-size: 1.1rem;"></p>
+
+                <div id="improvementTips" style="margin-top: 20px;">
+                    <h4 style="color: #a5b4fc; margin-bottom: 10px;">How to Improve:</h4>
+                    <ul id="tipsList" style="list-style: none; padding-left: 0; color: #cbd5e1;"></ul>
+                </div>
+            </div>
+
+            <div class="result-actions" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="window.location.href='career.html'" class="outline-btn">Explore More Careers</button>
+                <button id="retakeBtn" class="primary-btn">Retake This Test</button>
+                <button onclick="window.location.href='profile.html'" class="primary-btn"
+                    style="background: #10b981;">View Profile</button>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const career = params.get("career");
+            const score = parseInt(params.get("score"));
+
+            if (!career || isNaN(score)) {
+                window.location.href = "career.html";
+                return;
+            }
+
+            document.getElementById("careerName").textContent = career;
+            document.getElementById("scoreValue").textContent = score + "%";
+            // Action Buttons Logic
+            const actionBtn = document.getElementById("retakeBtn");
+
+            if (score >= 50) {
+                // PASS: Round 2
+                actionBtn.textContent = "Proceed to Round 2 ➔";
+                actionBtn.style.background = "#10b981"; // Green
+                actionBtn.onclick = () => window.location.href = `level_selection.html?career=${encodeURIComponent(career)}`;
+            } else {
+                // FAIL: Study Material
+                actionBtn.textContent = "Download Study Guide 📄";
+                actionBtn.style.background = "#f59e0b"; // Orange/Yellow
+                actionBtn.onclick = () => window.location.href = `study_guide.html?career=${encodeURIComponent(career)}`;
+            }
+            const badgeContainer = document.getElementById("badgeContainer");
+            const feedbackText = document.getElementById("feedbackText");
+            const tipsList = document.getElementById("tipsList");
+
+            let badgeClass = "";
+            let badgeText = "";
+            let message = "";
+            let tips = [];
+
+            if (score >= 80) {
+                badgeClass = "eligibility-high";
+                badgeText = "Highly Eligible";
+                message = `Outstanding performance! You have demonstrated a strong aptitude for ${career}. Your understanding of the core concepts is solid.`;
+                tips = [
+                    "Consider looking for advanced courses or certifications.",
+                    "Start building a portfolio or looking for internships.",
+                    "Connect with professionals in this field."
+                ];
+            } else if (score >= 50) {
+                badgeClass = "eligibility-mid";
+                badgeText = "Eligible";
+                message = `Good effort! You have potential in ${career}, but there are some gaps in your knowledge. With some focused study, you can excel.`;
+                tips = [
+                    "Review the basics and foundational theories.",
+                    "Practice with more real-world scenarios or problems.",
+                    "Join online communities to learn from others."
+                ];
+            } else {
+                badgeClass = "eligibility-low";
+                badgeText = "Needs Preparation";
+                message = `It seems like ${career} might be a new or challenging field for you right now. Don't be discouraged!`;
+                tips = [
+                    "Start with introductory tutorials and beginner guides.",
+                    "Focus on understanding the 'why' before the 'how'.",
+                    "Take your time to build a strong foundation before testing again."
+                ];
+            }
+
+            badgeContainer.innerHTML = `<span class="eligibility-badge ${badgeClass}" style="font-size: 1.2rem; padding: 10px 20px;">${badgeText}</span>`;
+            feedbackText.textContent = message;
+
+            tipsList.innerHTML = tips.map(tip => `<li style="margin-bottom: 8px; display: flex; align-items: center;"><span style="color: #6366f1; margin-right: 10px;">➤</span> ${tip}</li>`).join("");
+
+            // Animate Score
+            const circle = document.querySelector('.score-circle');
+            let currentScore = 0;
+            const interval = setInterval(() => {
+                if (currentScore >= score) clearInterval(interval);
+                else {
+                    currentScore++;
+                    document.getElementById("scoreValue").textContent = currentScore + "%";
+                }
+            }, 20);
+        });
+    </script>
+
+    <style>
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 8px solid #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+            background: #1e1b4b;
+        }
+
+        .outline-btn {
+            background: transparent;
+            border: 2px solid #6366f1;
+            color: #f3f4f6;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .outline-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .primary-btn {
+            background: #6366f1;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</body>
+
+</html>

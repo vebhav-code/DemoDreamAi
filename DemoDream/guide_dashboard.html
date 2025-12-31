@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Guide Dashboard | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="gate.js"></script>
+    <style>
+        body {
+            background: #f1f5f9;
+            display: flex;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #0f172a;
+            color: #fff;
+            min-height: 100vh;
+            padding: 30px 20px;
+            position: fixed;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #6366f1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #1e293b;
+            color: #fff;
+        }
+
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 260px;
+            padding: 40px;
+            width: calc(100% - 260px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+
+        .welcome h2 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: #1e293b;
+        }
+
+        .welcome p {
+            color: #64748b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-val {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #334155;
+        }
+
+        .request-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .req-info h4 {
+            margin: 0 0 4px 0;
+        }
+
+        .req-info p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .action-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Onboarding Styles */
+        .onboard-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="url"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .upload-zone {
+            border: 2px dashed #cbd5e1;
+            padding: 40px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover {
+            border-color: #6366f1;
+            background: #f8fafc;
+        }
+
+        .fields-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .field-card {
+            border: 2px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .field-card.selected {
+            border-color: #6366f1;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .btn-finish {
+            background: #0f172a;
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="logo">DemoDream PRO</div>
+        <div class="nav-item active" onclick="showSection('overview', this)">📊 Dashboard</div>
+        <div class="nav-item" onclick="showSection('requests', this)">💬 Requests <span id="requestCountBadge"
+                style="background:red; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:auto; display:none;">0</span>
+        </div>
+        <div class="nav-item" onclick="showSection('schedule', this)">📅 Schedule</div>
+        <div class="nav-item" onclick="showSection('settings', this)">⚙️ Settings</div>
+        <a href="#" class="nav-item" id="sidebarLogout" style="margin-top:auto;">🚪 Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <div class="welcome">
+                <h2 id="guideName">Welcome Back, Guide!</h2>
+                <p>Ready to inspire the next generation?</p>
+            </div>
+            <div>
+                <span id="verificationStatus"
+                    style="background:#fef9c3; color:#854d0e; padding:6px 14px; border-radius:20px; font-weight:600; font-size:0.9rem;">Verification:
+                    Pending ⏳</span>
+            </div>
+        </div>
+
+        <!-- Verification Section (Hidden by default) -->
+        <div id="verifySection" style="display: none;">
+            <div class="onboard-card">
+                <h1>Complete Your Profile 📄</h1>
+                <p style="color: #64748b; margin-bottom: 30px;">Verify your background to start receiving mentorship
+                    tasks.</p>
+
+                <div class="form-group">
+                    <label>LinkedIn Profile URL</label>
+                    <input type="url" id="linkedinUrl" placeholder="https://linkedin.com/in/yourprofile">
+                </div>
+
+                <div class="form-group">
+                    <label>Professional Domain / Expertise</label>
+                    <div class="fields-grid" id="fieldsGrid">
+                        <div class="field-card" onclick="toggleField(this)">Software Engineering</div>
+                        <div class="field-card" onclick="toggleField(this)">Data Science</div>
+                        <div class="field-card" onclick="toggleField(this)">Product Management</div>
+                        <div class="field-card" onclick="toggleField(this)">UI/UX Design</div>
+                        <div class="field-card" onclick="toggleField(this)">Marketing</div>
+                        <div class="field-card" onclick="toggleField(this)">Finance</div>
+                        <div class="field-card" onclick="toggleField(this)">Law</div>
+                        <div class="field-card" onclick="toggleField(this)">Medicine</div>
+                        <div class="field-card" onclick="toggleField(this)">Psychology</div>
+                    </div>
+                </div>
+
+                <button class="btn-finish" id="finishBtn" onclick="submitVerification()">Submit for Verification
+                    🚀</button>
+            </div>
+        </div>
+
+        <div id="dashboardContent">
+            <!-- Overview Section -->
+            <div id="overviewSection" class="dashboard-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-val" id="statsGuided">0</div>
+                        <div class="stat-label">Students Guided</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val">4.9 ⭐</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" id="statsPending">0</div>
+                        <div class="stat-label">Pending Requests</div>
+                    </div>
+                </div>
+
+                <div class="section-title">New Guidance Requests</div>
+                <div id="availableRequests">
+                    <p style="color:#64748b;">Loading available mentorship requests...</p>
+                </div>
+
+                <div class="section-title" style="margin-top: 40px;">My Active Chats</div>
+                <div id="activeChats">
+                    <p style="color:#64748b;">Loading your chats...</p>
+                </div>
+            </div>
+
+            <!-- Requests Section -->
+            <div id="requestsSection" class="dashboard-section">
+                <div class="section-title">Mentorship Requests Management</div>
+                <div class="onboard-card" style="padding: 24px;">
+                    <p style="color: #64748b;">View and manage all incoming requests from students aligned with your
+                        expertise.</p>
+                    <div id="allRequestsList">
+                        <p>Loading all requests...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Section -->
+            <div id="scheduleSection" class="dashboard-section">
+                <div class="section-title">Your Mentoring Schedule</div>
+                <div class="onboard-card">
+                    <div style="text-align:center; padding: 40px;">
+                        <span style="font-size: 4rem;">📅</span>
+                        <h3>Schedule Management Coming Soon</h3>
+                        <p style="color: #64748b;">Integrate your Google Calendar or set custom availability hours for
+                            students to book sessions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settingsSection" class="dashboard-section">
+                <div class="section-title">Guide Profile Settings</div>
+                <div class="onboard-card">
+                    <div class="form-group">
+                        <label>Update Professional Bio</label>
+                        <textarea id="settingsBio" placeholder="Tell students about your journey..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn Profile</label>
+                        <input type="url" id="settingsLinkedin" placeholder="https://linkedin.com/in/...">
+                    </div>
+                    <button class="action-btn" onclick="saveSettings()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const userEmail = localStorage.getItem("userEmail") || localStorage.getItem("guideEmail");
+        const name = localStorage.getItem("userName") || localStorage.getItem("guideName");
+        const API_BASE_URL = "http://127.0.0.1:8000";
+
+        if (!userEmail) window.location.href = "login.html";
+        if (name) document.getElementById("guideName").textContent = `Welcome Back, ${name}!`;
+
+        document.getElementById('sidebarLogout').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = "login.html";
+        });
+
+        async function loadGuideData() {
+            try {
+                // Check Onboarding
+                const statusRes = await fetch(`${API_BASE_URL}/guide/status/${userEmail}`);
+                const statusData = await statusRes.json();
+
+                if (!statusData.is_onboarded) {
+                    document.getElementById('verifySection').style.display = 'block';
+                    document.getElementById('dashboardContent').style.display = 'none';
+                    return;
+                }
+
+                document.getElementById('verifySection').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+
+                // Update badge
+                const badge = document.getElementById('verificationStatus');
+                if (statusData.verified) {
+                    badge.textContent = "Verified ✓";
+                    badge.style.background = "#dcfce7";
+                    badge.style.color = "#166534";
+                }
+
+                // 1. Load Requests
+                const reqRes = await fetch(`${API_BASE_URL}/mentorship/available/${userEmail}`);
+                const requests = await reqRes.json();
+
+                // 2. Load Active Sessions
+                const chatRes = await fetch(`${API_BASE_URL}/chat/sessions/${userEmail}`);
+                const sessions = await chatRes.json();
+
+                // Update Stats
+                document.getElementById('statsPending').textContent = requests.length;
+                document.getElementById('statsGuided').textContent = sessions.length;
+
+                const countBadge = document.getElementById('requestCountBadge');
+                if (requests.length > 0) {
+                    countBadge.textContent = requests.length;
+                    countBadge.style.display = 'inline-block';
+                }
+
+                // Render Requests
+                const reqList = document.getElementById('availableRequests');
+                const allReqList = document.getElementById('allRequestsList');
+
+                const reqHTML = requests.length === 0 ? '<p style="color:#64748b;">No new requests.</p>' :
+                    requests.map(r => `
+                        <div class="request-card">
+                            <div class="req-info">
+                                <span style="font-size:0.75rem; color:#6366f1; font-weight:700;">${r.field.toUpperCase()}</span>
+                                <h4>${r.title}</h4>
+                                <p>${r.explorer_name}: "${r.description.substring(0, 100)}..."</p>
+                            </div>
+                            <button class="action-btn" onclick="acceptRequest(${r.id})">Review & Accept</button>
+                        </div>
+                    `).join('');
+
+                reqList.innerHTML = reqHTML;
+                allReqList.innerHTML = reqHTML;
+
+                // Render Chats
+                const chatList = document.getElementById('activeChats');
+                if (sessions.length === 0) {
+                    chatList.innerHTML = '<p style="color:#64748b;">No active students.</p>';
+                } else {
+                    chatList.innerHTML = sessions.map(s => `
+                        <div class="request-card">
+                            <div class="req-info">
+                                <h4>${s.explorer_name}</h4>
+                                <p>${s.title} (${s.field})</p>
+                            </div>
+                            <a href="chat.html?session=${s.id}" class="action-btn" style="text-decoration:none;">Open Chat</a>
+                        </div>
+                    `).join('');
+                }
+
+            } catch (err) { console.error(err); }
+        }
+
+        async function acceptRequest(requestId) {
+            if (!confirm("Start mentoring this student?")) return;
+            try {
+                const res = await fetch(`${API_BASE_URL}/mentorship/accept`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ guide_email: userEmail, request_id: requestId })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    window.location.href = `chat.html?session=${data.session_id}`;
+                }
+            } catch (err) { alert("Error accepting request"); }
+        }
+
+        function showSection(sectionId, el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId + 'Section').classList.add('active');
+        }
+
+        async function saveSettings() {
+            alert("Profile settings updated! (Simulated)");
+        }
+
+        // Onboarding Logic
+        let selectedFields = [];
+        function toggleField(el) {
+            el.classList.toggle('selected');
+            const txt = el.textContent;
+            if (selectedFields.includes(txt)) selectedFields = selectedFields.filter(f => f !== txt);
+            else selectedFields.push(txt);
+        }
+
+        async function submitVerification() {
+            const linkedin = document.getElementById('linkedinUrl').value;
+            if (!linkedin || selectedFields.length === 0) return alert("Please complete all fields.");
+
+            document.getElementById('finishBtn').textContent = "Processing...";
+            try {
+                const res = await fetch(`${API_BASE_URL}/guide/onboard`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email: userEmail,
+                        linkedin_url: linkedin,
+                        expertise_fields: selectedFields
+                    })
+                });
+                if (res.ok) {
+                    alert("Verification submitted!");
+                    location.reload();
+                }
+            } catch (e) { alert("Error submitting profile."); }
+        }
+
+        loadGuideData();
+    </script>
+</body>
+
+</html>

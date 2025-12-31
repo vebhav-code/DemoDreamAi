@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Specialization | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dropdown.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="gate.js"></script>
+    <style>
+        .selection-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .selection-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #6366f1;
+            transform: translateY(-5px);
+        }
+
+        .selection-card.selected {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .topic-pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-top: 10px;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+
+<body class="quiz-body">
+
+    <header class="quiz-header">
+        <div class="quiz-header-inner">
+            <div class="logo">DemoDream</div>
+            <nav class="quiz-nav">
+                <a href="index.html">Home</a>
+                <a href="career.html">Careers</a>
+                <a href="profile.html">Profile</a>
+            </nav>
+        </div>
+        <div class="header-gradient"></div>
+    </header>
+
+    <main class="quiz-main">
+        <section class="result-container" style="max-width: 1000px; text-align: center;">
+            <div style="margin-bottom: 40px;">
+                <span
+                    style="background: #10b981; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Round
+                    1 Cleared</span>
+                <h1 style="font-size: 2.5rem; margin-top: 15px; color: #f3f4f6;">Choose Your Specialization</h1>
+                <p style="color: #94a3b8; font-size: 1.1rem; max-width: 600px; margin: 10px auto;">
+                    You have proven your basics in <span id="parentCareer"
+                        style="color: #a5b4fc; font-weight: 700;">...</span>.
+                    Now select a specialized path for Round 2.
+                </p>
+            </div>
+
+            <div id="optionsGrid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; text-align: left;">
+                <!-- Loading State -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #94a3b8;">
+                    Loading specializations...
+                </div>
+            </div>
+
+            <div style="margin-top: 50px;">
+                <button id="startRound2Btn" class="submit-btn"
+                    style="max-width: 300px; opacity: 0.5; cursor: not-allowed;" disabled>Start Round 2 Exam</button>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const parentCareer = params.get("career");
+
+            if (!parentCareer) {
+                window.location.href = "career.html";
+                return;
+            }
+
+            document.getElementById("parentCareer").textContent = parentCareer;
+
+            // Mock Data for Sub-Domains (This aligns with the user's request: Engineering -> CSE -> Backend)
+            // In a real backend, this would be an API call likeGET /specializations?career=Engineering
+            const specializations = {
+                "Engineer": [
+                    { id: "CSE", name: "Computer Science (CSE)", icon: "💻", topics: ["Algorithms", "Data Structures", "OS"] },
+                    { id: "Mech", name: "Mechanical Engineering", icon: "⚙️", topics: ["Thermodynamics", "Mechanics", "CAD"] },
+                    { id: "Civil", name: "Civil Engineering", icon: "🏗️", topics: ["Structures", "Materials", "Surveying"] },
+                    { id: "Elec", name: "Electrical Engineering", icon: "⚡", topics: ["Circuits", "Signals", "Power Systems"] }
+                ],
+                "Doctor": [
+                    { id: "Surgeon", name: "Surgery", icon: "🔪", topics: ["Anatomy", "Procedures", "Emergency Care"] },
+                    { id: "Cardio", name: "Cardiology", icon: "❤️", topics: ["Heart Structure", "ECG", "treatments"] },
+                    { id: "Neuro", name: "Neurology", icon: "🧠", topics: ["Brain Function", "Nervous System", "Disorders"] }
+                ],
+                "Musician": [
+                    { id: "Theory", name: "Music Theory & Comp", icon: "🎼", topics: ["Harmony", "Rhythm", "Notation"] },
+                    { id: "Performance", name: "Live Performance", icon: "🎤", topics: ["Stage Presence", "Improv", "Sound Check"] },
+                    { id: "Prod", name: "Music Production", icon: "🎚️", topics: ["Mixing", "Mastering", "DAWs"] }
+                ]
+            };
+
+            // Fallback for generic careers
+            const genericSpecs = [
+                { id: "Gen1", name: "Core Fundamentals", icon: "📚", topics: ["Advanced Theory", "Key Concepts"] },
+                { id: "Gen2", name: "Applied Practice", icon: "🔨", topics: ["Case Studies", "Real-world App"] }
+            ];
+
+            const options = specializations[parentCareer] || genericSpecs;
+            const grid = document.getElementById("optionsGrid");
+            const startBtn = document.getElementById("startRound2Btn");
+            let selectedSpec = null;
+
+            grid.innerHTML = options.map(opt => `
+                <div class="selection-card" onclick="selectCard(this, '${opt.name}')">
+                    <span class="card-icon">${opt.icon}</span>
+                    <h3 style="color: #f3f4f6; margin-bottom: 5px;">${opt.name}</h3>
+                    <div style="margin-top: 15px;">
+                        <small style="color: #94a3b8; display: block; margin-bottom: 5px;">Exam Topics:</small>
+                        ${opt.topics.map(t => `<span class="topic-pill">${t}</span>`).join('')}
+                    </div>
+                </div>
+            `).join("");
+
+            window.selectCard = (card, specName) => {
+                // Deselect all
+                document.querySelectorAll(".selection-card").forEach(c => c.classList.remove("selected"));
+
+                // Select clicked
+                card.classList.add("selected");
+                selectedSpec = specName;
+
+                // Enable Button
+                startBtn.disabled = false;
+                startBtn.style.opacity = "1";
+                startBtn.style.cursor = "pointer";
+                startBtn.textContent = `Start Round 2: ${specName}`;
+            };
+
+            startBtn.addEventListener("click", () => {
+                if (selectedSpec) {
+                    // Start Round 2 with a composite context
+                    // "Engineering - Computer Science (CSE)"
+                    const nextContext = `${parentCareer} - ${selectedSpec}`;
+                    window.location.href = `quiz.html?career=${encodeURIComponent(nextContext)}&round=2`;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

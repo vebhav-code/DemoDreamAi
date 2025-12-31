@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dropdown.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="gate.js"></script>
+</head>
+
+<body class="login-bg">
+    <header>
+        <div class="logo">DemoDream</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="career.html">Careers</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+
+    <div class="profile-layout"
+        style="display: flex; gap: 30px; max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+        <!-- Sidebar -->
+        <aside class="profile-sidebar"
+            style="flex: 1; max-width: 300px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; text-align: center; height: fit-content; backdrop-filter: blur(10px);">
+            <div class="profile-avatar-xl"
+                style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; margin: 0 auto 20px; box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);">
+                <span id="sideAvatar">U</span>
+            </div>
+            <h2 id="sideName" style="color: #f3f4f6; margin-bottom: 5px;">User Name</h2>
+            <p id="sideEmail" style="color: #94a3b8; font-size: 0.9rem; word-break: break-all;">user@email.com</p>
+
+            <div class="profile-stats-mini"
+                style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px;">
+                    <div style="font-size: 1.2rem;">💎</div>
+                    <div style="color:white; font-weight:700;" id="statPoints">0</div>
+                    <div style="color:#94a3b8; font-size:0.7rem;">Points</div>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px;">
+                    <div style="font-size: 1.2rem;">⭐</div>
+                    <div style="color:white; font-weight:700;" id="statRank">-</div>
+                    <div style="color:#94a3b8; font-size:0.7rem;">Global Rank</div>
+                </div>
+            </div>
+
+            <nav class="profile-nav" style="margin-top: 30px; text-align: left;">
+                <button class="nav-btn active" onclick="showSection('overview')">📊 Overview</button>
+                <button class="nav-btn" onclick="showSection('history')">📜 Test History</button>
+                <button class="nav-btn" onclick="showSection('settings')">⚙️ Settings</button>
+            </nav>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="profile-content" style="flex: 3;">
+
+            <!-- Overview Section -->
+            <section id="overview" class="content-section">
+                <header style="margin-bottom: 30px;">
+                    <h1 style="color: #f3f4f6;">Welcome back, <span id="welcomeName">User</span>!</h1>
+                    <p style="color: #94a3b8;">Here's what's happening with your learning journey.</p>
+                </header>
+
+                <div class="stats-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 25px; border-radius: 16px; color: white;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📚</div>
+                        <div style="font-size: 2rem; font-weight: 700;" id="testsTaken">0</div>
+                        <div>Tests Completed</div>
+                    </div>
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, #10b981, #059669); padding: 25px; border-radius: 16px; color: white;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
+                        <div style="font-size: 2rem; font-weight: 700;" id="avgScore">0%</div>
+                        <div>Average Score</div>
+                    </div>
+                    <div class="stat-card"
+                        style="padding: 25px; border-radius: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🔥</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: #f3f4f6;">3</div>
+                        <div style="color: #94a3b8;">Day Streak</div>
+                    </div>
+                </div>
+
+                <h3 style="color: #f3f4f6; margin-bottom: 20px;">Recent Activity</h3>
+                <div id="recentActivityList" style="display: flex; flex-direction: column; gap: 15px;">
+                    <!-- Injected by JS -->
+                </div>
+            </section>
+
+            <!-- Test History Section -->
+            <section id="history" class="content-section" style="display: none;">
+                <h2 style="color: #f3f4f6; margin-bottom: 20px;">Full Test History</h2>
+                <div
+                    style="background: rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                    <table class="history-table" style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: rgba(0,0,0,0.2); color: #94a3b8;">
+                            <tr>
+                                <th style="padding: 15px; text-align: left;">Career</th>
+                                <th style="padding: 15px; text-align: left;">Score</th>
+                                <th style="padding: 15px; text-align: left;">Rank</th>
+                                <th style="padding: 15px; text-align: left;">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody" style="color: #e2e8f0;">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section" style="display: none;">
+                <h2 style="color: #f3f4f6; margin-bottom: 25px;">Account Settings</h2>
+
+                <div
+                    style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
+                    <h3 style="color: #f3f4f6; margin-bottom: 20px; font-size: 1.2rem;">Detailed Profile</h3>
+                    <form class="settings-form" id="profileForm">
+                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="pName">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Username / Display Name</label>
+                                <input type="text" id="pUsername">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email Address (Read Only)</label>
+                                <input type="email" id="pEmail" disabled style="opacity:0.7; cursor:not-allowed;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mobile Number</label>
+                                <input type="tel" id="pMobile">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                <input type="date" id="pDob">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select id="pGender"
+                                    style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #4b5563; background: #1f2937; color: white;">
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Highest Qualification Score</label>
+                                <input type="text" id="pQualification" placeholder="e.g. CGPA 9.0 or 85%">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Country</label>
+                                <input type="text" id="pCountry">
+                            </div>
+
+                            <div class="form-group">
+                                <label>State / City</label>
+                                <input type="text" id="pStateCity">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Time Zone</label>
+                                <input type="text" id="pTimezone">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Preferred Language</label>
+                                <input type="text" id="pLanguage" value="English">
+                            </div>
+                        </div>
+
+                        <div
+                            style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="color: #94a3b8; font-size: 0.9rem;">
+                                Account Status: <span id="pStatus"
+                                    style="color: #10b981; font-weight: 600;">Active</span>
+                                <br>Created: <span id="pCreated">Loading...</span>
+                            </div>
+                            <button type="submit" class="primary-btn"
+                                style="background: #6366f1; border: none; padding: 12px 30px; color: white; border-radius: 8px; cursor: pointer; font-weight: 600;">Save
+                                Profile</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div
+                    style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="color: #f3f4f6; margin-bottom: 20px; font-size: 1.2rem;">Security</h3>
+                    <button class="outline-btn"
+                        style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: 0.3s;"
+                        onmouseover="this.style.background='#ef4444'; this.style.color='white'"
+                        onmouseout="this.style.background='transparent'; this.style.color='#ef4444'">Change
+                        Password</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+
+    <style>
+        .nav-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            background: transparent;
+            border: none;
+            text-align: left;
+            color: #94a3b8;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f3f4f6;
+        }
+
+        .nav-btn.active {
+            background: #6366f1;
+            color: white;
+            font-weight: 600;
+        }
+
+        .activity-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #6366f1;
+        }
+    </style>
+
+    <script>
+        // Tab Switching Logic
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(el => el.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const email = localStorage.getItem("userEmail");
+            const name = localStorage.getItem("userName");
+
+            if (!email) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Populate User Info
+            document.getElementById("sideName").textContent = name;
+            document.getElementById("welcomeName").textContent = name;
+            document.getElementById("sideEmail").textContent = email;
+            document.getElementById("sideAvatar").textContent = name.charAt(0).toUpperCase();
+
+            // Settings Form - Fetch Profile Details
+            try {
+                const profileRes = await fetch(`http://127.0.0.1:8000/profile/${email}`);
+                if (profileRes.ok) {
+                    const profile = await profileRes.json();
+
+                    document.getElementById("pName").value = profile.name || "";
+                    document.getElementById("pUsername").value = profile.username || "";
+                    document.getElementById("pEmail").value = profile.email || "";
+                    document.getElementById("pMobile").value = profile.mobile_number || "";
+                    document.getElementById("pDob").value = profile.dob || "";
+                    document.getElementById("pGender").value = profile.gender || "";
+                    document.getElementById("pCountry").value = profile.country || "";
+                    document.getElementById("pStateCity").value = profile.state_city || "";
+                    document.getElementById("pQualification").value = profile.qualification_score || "";
+                    document.getElementById("pTimezone").value = profile.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    document.getElementById("pLanguage").value = profile.language || "English";
+
+                    document.getElementById("pCreated").textContent = profile.created_at ? new Date(profile.created_at).toLocaleDateString() : "N/A";
+
+                    // Update Sidebar Name if changed
+                    if (profile.name) {
+                        document.getElementById("sideName").textContent = profile.name;
+                        document.getElementById("welcomeName").textContent = profile.name;
+                        localStorage.setItem("userName", profile.name); // Keep local storage sync
+                    }
+                }
+            } catch (e) {
+                console.error("Error fetching profile details:", e);
+                // Fallback to basic local storage
+                document.getElementById("pName").value = name;
+                document.getElementById("pEmail").value = email;
+            }
+
+            // Handle Profile Update
+            document.getElementById("profileForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector("button");
+                btn.textContent = "Saving...";
+                btn.disabled = true;
+
+                const payload = {
+                    name: document.getElementById("pName").value,
+                    username: document.getElementById("pUsername").value,
+                    mobile_number: document.getElementById("pMobile").value,
+                    dob: document.getElementById("pDob").value,
+                    gender: document.getElementById("pGender").value,
+                    country: document.getElementById("pCountry").value,
+                    state_city: document.getElementById("pStateCity").value,
+                    qualification_score: document.getElementById("pQualification").value,
+                    timezone: document.getElementById("pTimezone").value,
+                    language: document.getElementById("pLanguage").value
+                };
+
+                try {
+                    const res = await fetch(`http://127.0.0.1:8000/update-profile/${email}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (res.ok) {
+                        alert("Profile updated successfully!");
+                        // Sync local Name
+                        localStorage.setItem("userName", payload.name);
+                        document.getElementById("sideName").textContent = payload.name;
+                        document.getElementById("welcomeName").textContent = payload.name;
+                        document.getElementById("sideAvatar").textContent = payload.name.charAt(0).toUpperCase();
+                    } else {
+                        const err = await res.text();
+                        console.error("Profile Update Error:", err);
+                        alert("Failed to update profile: " + err);
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("Connection error.");
+                } finally {
+                    btn.textContent = "Save Profile";
+                    btn.disabled = false;
+                }
+            });
+
+            try {
+                // Fetch Performance Data
+                const response = await fetch(`http://127.0.0.1:8000/performance/${email}`);
+                const data = await response.json();
+                const history = data.history || [];
+                const stats = data.stats || { points: 0, global_rank: "-" };
+
+                // Update Sidebar Stats
+                document.getElementById("statPoints").textContent = stats.points;
+                document.getElementById("statRank").textContent = "#" + stats.global_rank;
+
+                // Stats Calculation for Overview
+                document.getElementById("testsTaken").textContent = history.length;
+
+                if (history.length > 0) {
+                    const avg = Math.round(history.reduce((a, b) => a + b.score, 0) / history.length);
+                    document.getElementById("avgScore").textContent = avg + "%";
+                }
+
+                // Populate Activity List (Last 3)
+                const activityList = document.getElementById("recentActivityList");
+                const recentHistory = history.slice().reverse().slice(0, 3);
+
+                if (recentHistory.length === 0) {
+                    activityList.innerHTML = '<p style="color:#94a3b8;">No recent activity.</p>';
+                } else {
+                    activityList.innerHTML = recentHistory.map(item => `
+                        <div class="activity-item">
+                            <div>
+                                <div style="color: #f3f4f6; font-weight: 600;">Completed ${item.career} Test</div>
+                                <div style="color: #94a3b8; font-size: 0.85rem;">Score: ${item.score}% • Rank: #${item.rank}</div>
+                            </div>
+                            <div style="color: #94a3b8; font-size: 0.85rem;">${new Date(item.timestamp).toLocaleDateString()}</div>
+                        </div>
+                    `).join("");
+                }
+
+                // Populate Full History Table
+                const historyBody = document.getElementById("historyBody");
+                if (history.length > 0) {
+                    historyBody.innerHTML = history.slice().reverse().map(item => `
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 15px;">${item.career}</td>
+                        <td style="padding: 15px;">
+                            <span style="background: ${item.score >= 80 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}; color: ${item.score >= 80 ? '#34d399' : '#f87171'}; padding: 4px 8px; border-radius: 6px; font-size: 0.9rem;">
+                                ${item.score}%
+                            </span>
+                        </td>
+                        <td style="padding: 15px;">
+                            <span style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; padding: 4px 8px; border-radius: 6px; font-size: 0.9rem;">
+                                #${item.rank}
+                            </span>
+                        </td>
+                        <td style="padding: 15px;">${new Date(item.timestamp).toLocaleDateString()}</td>
+                    </tr>
+                `).join("");
+                } else {
+                    historyBody.innerHTML = "<tr><td colspan='5' style='padding:20px; text-align:center; color:#94a3b8;'>No tests taken yet.</td></tr>";
+                }
+
+            } catch (err) {
+                console.error("Failed to load performance:", err);
+            }
+        });
+    </script>
+</body>
+
+</html>

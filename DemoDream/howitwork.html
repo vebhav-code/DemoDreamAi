@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>How DemoDream Works</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <script src="gate.js"></script>
+</head>
+
+<body class="howitworks-dark-bg">
+  <!-- Creative Home Button Box -->
+  <div class="home-box-bar">
+    <a href="index.html" class="home-box-btn">
+      <span class="home-icon">🏠</span>
+      <span class="home-text">Back to Home</span>
+    </a>
+  </div>
+  <div class="howitworks-dark-container">
+    <h1 class="howitworks-dark-heading">Your Journey Begins Here</h1>
+    <p class="howitworks-dark-subheading">
+      Welcome to <span style="color:#6366f1;font-weight:700;">DemoDream</span> — where ambition meets opportunity.<br>
+      Discover how you can step into your dream career, one immersive experience at a time.
+    </p>
+    <ul class="howitworks-dark-steps">
+      <li>
+        <span class="step-icon">🎯</span>
+        <strong>Pick Your Passion:</strong>
+        <br>
+        Select the career that sets your soul on fire. Your journey starts with a single choice.
+      </li>
+      <li>
+        <span class="step-icon">📚</span>
+        <strong>Show Your Spark:</strong>
+        <br>
+        Bring your curiosity and basic knowledge of your chosen field. Every dream begins with learning.
+      </li>
+      <li>
+        <span class="step-icon">📝</span>
+        <strong>Challenge Yourself:</strong>
+        <br>
+        Take our interactive test. Your score, combined with expert insights, reveals your readiness for greatness.
+      </li>
+      <li>
+        <span class="step-icon">🤝</span>
+        <strong>Rise Again:</strong>
+        <br>
+        Didn’t ace it? Our mentors guide you for 15 days, then you get another shot. Growth is part of the adventure!
+      </li>
+      <li>
+        <span class="step-icon">🎓</span>
+        <strong>Level Up:</strong>
+        <br>
+        Access exclusive courses to sharpen your skills and prepare for your next challenge.
+      </li>
+      <li>
+        <span class="step-icon">🗂️</span>
+        <strong>Showcase Yourself:</strong>
+        <br>
+        Complete document verification and ace your interview. It’s your time to shine.
+      </li>
+      <li>
+        <span class="step-icon">🕶️</span>
+        <strong>Step Into Reality:</strong>
+        <br>
+        Experience your dream career in stunning virtual reality. We handle the booking—just bring your ambition.
+      </li>
+      <li>
+        <span class="step-icon">⏳</span>
+        <strong>Choose Your Adventure Time:</strong>
+        <br>
+        Decide how long you want to live your dream. The experience is yours to shape.
+      </li>
+      <li>
+        <span class="step-icon">💳</span>
+        <strong>Invest in Yourself:</strong>
+        <br>
+        Make payment based on your field and duration. Your future is worth it!
+      </li>
+    </ul>
+    <div class="howitworks-dark-note">
+      <p>
+        <strong>Ready to unlock your potential?</strong><br>
+        Every step is designed to help you discover, grow, and thrive. <br>
+        <span style="color:#6366f1;">Begin your DemoDream adventure now!</span>
+      </p>
+    </div>
+    <!-- Creative Acknowledgement Button -->
+    <div class="acknowledge-section">
+      <button id="acknowledgeBtn" class="acknowledge-btn">
+        <span class="acknowledge-icon">✅</span>
+        I have read and understood all the steps
+      </button>
+    </div>
+    <!-- Popup Modal -->
+    <div id="ackModal" class="ack-modal">
+      <div class="ack-modal-content">
+        <span class="ack-modal-close" id="closeAckModal">&times;</span>
+        <h2>Thank You!</h2>
+        <p class="ack-modal-message">
+          You’ve acknowledged all the important steps.<br>
+          You’re now ready to start your DemoDream journey.<br>
+          <span style="color:#6366f1;font-weight:700;">Best of luck!</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Popup logic
+    const ackBtn = document.getElementById('acknowledgeBtn');
+    const ackModal = document.getElementById('ackModal');
+    const closeAckModal = document.getElementById('closeAckModal');
+    ackBtn.onclick = function () {
+      ackModal.style.display = "flex";
+    }
+    closeAckModal.onclick = function () {
+      ackModal.style.display = "none";
+    }
+    window.onclick = function (event) {
+      if (event.target === ackModal) {
+        ackModal.style.display = "none";
+      }
+    }
+  </script>
+</body>
+
+</html>

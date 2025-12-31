@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chat | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f1f5f9;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: #fff;
+            padding: 15px 40px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .chat-title {
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 60%;
+            padding: 12px 18px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: #6366f1;
+            color: #fff;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: #fff;
+            color: #1e293b;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .timestamp {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            display: block;
+            text-align: right;
+        }
+
+        .input-area {
+            background: #fff;
+            padding: 20px 40px;
+            display: flex;
+            gap: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .chat-input:focus {
+            border-color: #6366f1;
+        }
+
+        .send-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+
+        .send-btn:hover {
+            background: #4f46e5;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-header">
+        <a href="#" class="back-link" onclick="history.back()">← Back</a>
+        <div class="chat-title" id="chatTitle">Mentorship Chat</div>
+        <div id="roleBadge"
+            style="font-size: 0.8rem; background: #e0e7ff; color: #4338ca; padding: 4px 10px; border-radius: 5px; font-weight: 600;">
+            Loading...</div>
+    </div>
+
+    <div class="chat-container" id="chatMessages">
+        <!-- Messages will appear here -->
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="messageInput" class="chat-input" placeholder="Type your advice or question here...">
+        <button class="send-btn" id="sendBtn">➤</button>
+    </div>
+
+    <script>
+        const userEmail = localStorage.getItem("userEmail");
+        const API_BASE_URL = "http://127.0.0.1:8000";
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session');
+
+        if (!sessionId) window.location.href = "index.html";
+
+        const messagesContainer = document.getElementById('chatMessages');
+        const input = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        // 1. Fetch Messages
+        async function loadMessages() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/chat/messages/${sessionId}`);
+                const messages = await res.json();
+
+                // Get user ID from profile or keep it simple if sender_id matches my own (context needed)
+                // For now, we'll fetch profile once to know our own ID
+                if (!window.myId) {
+                    const profRes = await fetch(`${API_BASE_URL}/profile/${userEmail}`);
+                    const profile = await profRes.json();
+                    // Note: The /profile endpoint doesn't return ID directly in the mock, 
+                    // but we can assume sender_id is unique.
+                    // In a real app, we'd have the user ID in localStorage.
+                    // Let's use a workaround: we know our email, we'll check sender_id logic on backend or just use Name.
+                }
+
+                renderMessages(messages);
+            } catch (err) { console.error(err); }
+        }
+
+        function renderMessages(messages) {
+            const myId = parseInt(localStorage.getItem("userId"));
+            messagesContainer.innerHTML = messages.map(m => {
+                return `
+                <div class="message ${m.sender_id === myId ? 'sent' : 'received'}">
+                    ${m.content}
+                    <span class="timestamp">${m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</span>
+                </div>
+            `;
+            }).join('');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // 2. Send Message
+        async function sendMessage() {
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = "";
+            try {
+                const res = await fetch(`${API_BASE_URL}/chat/send`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        session_id: parseInt(sessionId),
+                        sender_email: userEmail,
+                        content: text
+                    })
+                });
+                if (res.ok) {
+                    loadMessages();
+                }
+            } catch (err) { alert("Error sending message"); }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+        // Poll for new messages every 3 seconds
+        setInterval(loadMessages, 3000);
+        loadMessages();
+    </script>
+
+</body>
+
+</html>

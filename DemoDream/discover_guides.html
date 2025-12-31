@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Guides | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dropdown.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="gate.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .search-hero {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .search-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: -2rem auto 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.8rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .filter-select {
+            padding: 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.8rem;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .search-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .search-btn:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .discovery-grid {
+            max-width: 1200px;
+            margin: 2rem auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem 4rem;
+        }
+
+        .guide-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid transparent;
+        }
+
+        .guide-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-light);
+            box-shadow: 0 12px 20px rgba(99, 102, 241, 0.1);
+        }
+
+        .guide-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            background: #eef2ff;
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .guide-info h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--text-main);
+        }
+
+        .badge {
+            background: #dcfce7;
+            color: #166534;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.3rem;
+        }
+
+        .guide-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-tag {
+            background: #f1f5f9;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .bio {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 4.8em;
+        }
+
+        .card-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-outline {
+            flex: 1;
+            padding: 0.7rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.8rem;
+            background: transparent;
+            color: var(--text-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-primary {
+            flex: 1.5;
+            padding: 0.7rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .loading-skeleton {
+            animation: pulse 1.5s infinite;
+            background: #e2e8f0;
+            height: 20px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 4rem;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="index.html" class="logo">DemoDream</a>
+        <nav id="dynamicNav">
+            <!-- Populated by script.js common logic -->
+        </nav>
+    </header>
+
+    <div class="search-hero">
+        <h1>Find Your Expert Mentor</h1>
+        <p>Connect with industry leaders who have walked the path you're dreaming of.</p>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="nameInput" class="search-input" placeholder="Search by name or keyword...">
+        <select id="fieldFilter" class="filter-select">
+            <option value="All">All Domains</option>
+            <option value="Software Engineering">Software Engineering</option>
+            <option value="Data Science">Data Science</option>
+            <option value="Product Management">Product Management</option>
+            <option value="UI/UX Design">UI/UX Design</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Finance">Finance</option>
+            <option value="Law">Law</option>
+            <option value="Medicine">Medicine</option>
+            <option value="Psychology">Psychology</option>
+        </select>
+        <select id="expFilter" class="filter-select">
+            <option value="0">Any Experience</option>
+            <option value="2">2+ Years</option>
+            <option value="5">5+ Years</option>
+            <option value="10">10+ Years</option>
+        </select>
+        <button class="search-btn" onclick="fetchGuides()">Search Guides</button>
+    </div>
+
+    <div class="discovery-grid" id="guideGrid">
+        <!-- Skeleton Loading -->
+        <div class="guide-card">
+            <div class="loading-skeleton" style="width: 50%"></div>
+            <div class="loading-skeleton"></div>
+            <div class="loading-skeleton"></div>
+        </div>
+        <div class="guide-card">
+            <div class="loading-skeleton" style="width: 50%"></div>
+            <div class="loading-skeleton"></div>
+            <div class="loading-skeleton"></div>
+        </div>
+        <div class="guide-card">
+            <div class="loading-skeleton" style="width: 50%"></div>
+            <div class="loading-skeleton"></div>
+            <div class="loading-skeleton"></div>
+        </div>
+    </div>
+
+    <!-- Modal for Profile Preview -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content" id="modalTarget">
+            <!-- Populated on click -->
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:8000";
+        const email = localStorage.getItem("userEmail");
+
+        async function fetchGuides() {
+            const grid = document.getElementById('guideGrid');
+            const field = document.getElementById('fieldFilter').value;
+            const minExp = document.getElementById('expFilter').value;
+            const query = document.getElementById('nameInput').value;
+
+            try {
+                const res = await fetch(`${API_BASE}/guides/discovery?field=${field}&min_exp=${minExp}&query=${query}`);
+                const guides = await res.json();
+
+                renderGuides(guides);
+            } catch (err) {
+                grid.innerHTML = `<div class="empty-state"><h3>Failed to load guides. Is the server running?</h3><button onclick="fetchGuides()" class="search-btn">Retry</button></div>`;
+            }
+        }
+
+        function renderGuides(guides) {
+            const grid = document.getElementById('guideGrid');
+            if (guides.length === 0) {
+                grid.innerHTML = `<div class="empty-state"><i>🔍</i><h3>No matching guides found</h3><p>Try adjusting your filters or search keywords.</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = guides.map(g => `
+                <div class="guide-card">
+                    <div class="guide-header">
+                        <div class="avatar">${g.name.charAt(0)}</div>
+                        <div class="guide-info">
+                            <h3>${g.name}</h3>
+                            <div class="badge">verified Check</div>
+                        </div>
+                    </div>
+                    <div class="guide-meta">
+                        <span class="meta-tag">💼 ${g.domain}</span>
+                        <span class="meta-tag">⏳ ${g.experience} Years Exp</span>
+                    </div>
+                    <p class="bio">${g.bio || 'No bio provided.'}</p>
+                    <div class="card-actions">
+                        <button class="btn-outline" onclick="showProfile(${JSON.stringify(g).replace(/"/g, '&quot;')})">View Profile</button>
+                        <button class="btn-primary" onclick="initiateMentorship('${g.email}', '${g.domain}')">Request Guidance</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showProfile(g) {
+            const modal = document.getElementById('profileModal');
+            const target = document.getElementById('modalTarget');
+            target.innerHTML = `
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div class="avatar" style="width: 100px; height: 100px; margin: 0 auto 1.5rem; font-size: 2.5rem;">${g.name.charAt(0)}</div>
+                    <h2>${g.name}</h2>
+                    <p style="color: var(--primary); font-weight: 600; font-size: 1.1rem;">${g.role} at ${g.org}</p>
+                    <div class="badge">VERIFIED GUIDE</div>
+                </div>
+                <div style="border-top: 1px solid #eee; padding-top: 1.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">About Me</h4>
+                    <p style="line-height: 1.6; color: var(--text-muted);">${g.bio || 'Professional industry expert.'}</p>
+                    
+                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem;">Primary Field</h4>
+                            <p class="meta-tag" style="display:inline-block;">${g.domain}</p>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 0.5rem;">Weekly Availability</h4>
+                            <p class="meta-tag" style="display:inline-block;">${g.availability || 'Flexible'}</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem;">
+                     <button class="btn-primary" style="width: 100%; padding: 1rem;" onclick="initiateMentorship('${g.email}', '${g.domain}')">Start Chat with ${g.name.split(' ')[0]}</button>
+                </div>
+            `;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        async function initiateMentorship(guideEmail, domain) {
+            if (!confirm(`Send a mentorship request to this guide in the field of ${domain}?`)) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/mentorship/request`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email: email,
+                        field: domain,
+                        title: `Career Guidance Request: ${domain}`,
+                        description: `I found your profile on the discovery page and would like to learn more about your experience in ${domain}.`
+                    })
+                });
+
+                if (res.ok) {
+                    alert("Request sent successfully! Redirecting you to your active sessions.");
+                    window.location.href = "mentorship_explorer.html";
+                } else {
+                    const data = await res.json();
+                    alert(data.detail || "Error sending request");
+                }
+            } catch (err) {
+                alert("Connection error. Check console.");
+            }
+        }
+
+        // Initial Load
+        window.onclick = function (event) {
+            const modal = document.getElementById('profileModal');
+            if (event.target == modal) closeModal();
+        }
+        async function loadPreferenceAndFetch() {
+            const fieldFilter = document.getElementById('fieldFilter');
+
+            // 1. Try to get student's latest career from performance API
+            if (email) {
+                try {
+                    const perfRes = await fetch(`${API_BASE}/performance/${email}`);
+                    if (perfRes.ok) {
+                        const data = await perfRes.json();
+                        if (data.history && data.history.length > 0) {
+                            // Get most recent career
+                            const latestCareer = data.history[data.history.length - 1].career;
+
+                            // Check if this career exists in our dropdown options
+                            for (let option of fieldFilter.options) {
+                                if (option.value === latestCareer) {
+                                    fieldFilter.value = latestCareer;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.warn("Could not load user preferences for filtering:", err);
+                }
+            }
+
+            // 2. Fetch guides with the (potentially updated) filter
+            await fetchGuides();
+        }
+
+        document.addEventListener("DOMContentLoaded", loadPreferenceAndFetch);
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

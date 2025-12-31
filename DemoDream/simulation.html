@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dropdown.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="gate.js"></script>
+    <style>
+        body.sim-body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sim-header {
+            background-color: #1e293b;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .sim-logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sim-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1000px;
+            width: 100%;
+            margin: 20px auto;
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid #334155;
+            position: relative;
+        }
+
+        /* Terminal Window Controls */
+        .terminal-header {
+            background: #0f172a;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .red {
+            background-color: #ef4444;
+        }
+
+        .yellow {
+            background-color: #f59e0b;
+        }
+
+        .green {
+            background-color: #22c55e;
+        }
+
+        .terminal-title {
+            margin-left: 10px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            background: #1e293b;
+            /* Slightly lighter than pure black */
+            background-image:
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+
+        /* Message Bubbles - Terminal Style */
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .message.system {
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        .message.assistant {
+            color: #10b981;
+            /* Green text for AI */
+            margin-right: 20%;
+        }
+
+        .message.user {
+            color: #38bdf8;
+            /* Blue text for User */
+            text-align: right;
+            margin-left: 20%;
+        }
+
+        .message-content {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .message.user .message-content {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        /* Input Area */
+        .input-area {
+            background: #0f172a;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #334155;
+        }
+
+        .cmd-prefix {
+            color: #f59e0b;
+            font-family: 'Fira Code', monospace;
+            font-weight: bold;
+            padding-top: 10px;
+        }
+
+        #userInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #e2e8f0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            outline: none;
+            resize: none;
+            /* No resize handle */
+        }
+
+        #sendBtn {
+            background: linear-gradient(90deg, #6366f1, #2563eb);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s;
+        }
+
+        #sendBtn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        #sendBtn:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #94a3b8;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+            margin: 0 2px;
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+
+<body class="sim-body">
+
+    <header class="sim-header">
+        <div class="sim-logo">DemoDream | Live</div>
+        <div>
+            <a href="live_dream.html"
+                style="color: #94a3b8; text-decoration: none; font-size: 0.9rem; margin-right: 15px;">Exit
+                Simulation</a>
+        </div>
+    </header>
+
+    <main class="sim-container">
+        <!-- Fake Terminal Bar -->
+        <div class="terminal-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+            <span class="terminal-title" id="terminalTitle">simulation.exe</span>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="message system">
+                > Initializing Neural Interface...<br>
+                > Loading Career Environment: <span id="dreamNameDisplay" style="color:#f59e0b">...</span><br>
+                > Connected.<br>
+            </div>
+            <!-- Dynamic Content Goes Here -->
+        </div>
+
+        <div class="input-area">
+            <span class="cmd-prefix">>_</span>
+            <input type="text" id="userInput" placeholder="Type your action..." autocomplete="off">
+            <button id="sendBtn">ENTER</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dreamRole = urlParams.get('dream') || "Unknown Career";
+            const chatArea = document.getElementById("chatArea");
+            const userInput = document.getElementById("userInput");
+            const sendBtn = document.getElementById("sendBtn");
+            const dreamNameDisplay = document.getElementById("dreamNameDisplay");
+
+            dreamNameDisplay.textContent = dreamRole;
+            document.getElementById("terminalTitle").textContent = `simulation.exe - ${dreamRole}`;
+
+            let chatHistory = []; // Needed for the backend
+
+            // Initial AI trigger
+            addTypingIndicator(); // Show loading first
+            fetchSimulationResponse("", []);
+
+            function addMessage(role, text) {
+                const msgDiv = document.createElement("div");
+                msgDiv.className = `message ${role}`;
+
+                // Format specific keywords for "terminal" feel if it's assistant
+                let formattedText = text;
+                if (role === 'assistant') {
+                    formattedText = formattedText.replace(/\n/g, "<br>");
+                    // Highlight commands or key phrases
+                    formattedText = formattedText.replace(/Option \d/g, match => `<span style='color:#f59e0b'>${match}</span>`);
+                }
+
+                msgDiv.innerHTML = `<div class="message-content">${formattedText}</div>`;
+                chatArea.appendChild(msgDiv);
+                scrollToBottom();
+            }
+
+            function addTypingIndicator() {
+                const indicator = document.createElement("div");
+                indicator.id = "typingIndicator";
+                indicator.className = "message assistant";
+                indicator.innerHTML = `
+                    <div class="message-content typing-indicator">
+                        <span></span><span></span><span></span>
+                    </div>
+                `;
+                chatArea.appendChild(indicator);
+                scrollToBottom();
+            }
+
+            function removeTypingIndicator() {
+                const indicator = document.getElementById("typingIndicator");
+                if (indicator) indicator.remove();
+            }
+
+            function scrollToBottom() {
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+
+            async function fetchSimulationResponse(userContext, history) {
+                try {
+                    const response = await fetch("http://127.0.0.1:8000/simulate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            role: dreamRole,
+                            user_context: userContext,
+                            history: history
+                        })
+                    });
+
+                    if (!response.ok) throw new Error("Server Error");
+
+                    const data = await response.json();
+                    removeTypingIndicator();
+
+                    // Add AI response to UI
+                    const aiText = data.reply;
+                    addMessage("assistant", aiText);
+
+                    // Update History for next turn
+                    // Note: 'history' sent to API only includes PAST turns. 
+                    // Now we must add the Current User turn (if any) and THIS AI response to the history for the NEXT call.
+
+                    if (userContext) {
+                        chatHistory.push({ role: "user", content: userContext });
+                    }
+                    chatHistory.push({ role: "assistant", content: aiText });
+
+                } catch (err) {
+                    removeTypingIndicator();
+                    addMessage("system", "Error: Connection lost. The simulation has been interrupted.");
+                    console.error(err);
+                }
+            }
+
+            function handleUserSubmit() {
+                const text = userInput.value.trim();
+                if (!text) return;
+
+                // 1. Add User Message to UI
+                addMessage("user", text);
+                userInput.value = "";
+                userInput.disabled = true;
+                sendBtn.disabled = true;
+
+                // 2. Show Typing Indicator
+                addTypingIndicator();
+
+                // 3. Call API
+                // We send the current history (past turns). The backend will handle appending the new text.
+                fetchSimulationResponse(text, chatHistory).then(() => {
+                    userInput.disabled = false;
+                    sendBtn.disabled = false;
+                    userInput.focus();
+                });
+            }
+
+            sendBtn.addEventListener("click", handleUserSubmit);
+            userInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") handleUserSubmit();
+            });
+
+            userInput.focus();
+        });
+    </script>
+</body>
+
+</html>

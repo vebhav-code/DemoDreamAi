@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Get Mentorship | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="gate.js"></script>
+    <style>
+        body {
+            background: #f8fafc;
+            font-family: 'Poppins', sans-serif;
+            color: #1e293b;
+        }
+
+        header {
+            background: #fff;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #6366f1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .requests-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .req-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-open {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-accepted {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .chat-btn {
+            background: #0f172a;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">DemoDream</div>
+        <nav>
+            <a href="index.html" style="text-decoration:none; color:inherit; margin-right:20px;">Home</a>
+            <a href="profile.html" style="text-decoration:none; color:inherit;">Profile</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h1>Ask a Expert 🧠</h1>
+            <p class="subtitle">Submit your career problem and get matched with a verified guide in your field.</p>
+
+            <form id="requestForm">
+                <div class="form-group">
+                    <label>Select Career Field</label>
+                    <select id="field" required>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Product Management">Product Management</option>
+                        <option value="UI/UX Design">UI/UX Design</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Law">Law</option>
+                        <option value="Medicine">Medicine</option>
+                        <option value="Psychology">Psychology</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Problem Title</label>
+                    <input type="text" id="title" placeholder="e.g., Confused between Web Dev and AI" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Describe your situation</label>
+                    <textarea id="description" placeholder="Provide details so the guide can help you better..."
+                        required></textarea>
+                </div>
+
+                <button type="submit" class="btn">Submit Query</button>
+            </form>
+        </div>
+
+        <div class="section-title" style="margin-bottom: 20px; font-size: 1.5rem; font-weight: 600;">My Active Sessions
+        </div>
+        <div id="activeSessions" class="requests-list">
+            <!-- Sessions will be loaded here -->
+            <p style="color: #64748b;">Loading your mentorship sessions...</p>
+        </div>
+    </div>
+
+    <script>
+        const userEmail = localStorage.getItem("userEmail");
+        const API_BASE_URL = "http://127.0.0.1:8000";
+
+        // 1. Submit Request
+        document.getElementById('requestForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.textContent = "Submitting...";
+
+            const payload = {
+                email: userEmail,
+                field: document.getElementById('field').value,
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value
+            };
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/mentorship/request`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    alert("Request submitted! We'll notify you when a guide accepts.");
+                    location.reload();
+                }
+            } catch (err) { alert("Error submitting request"); }
+            btn.textContent = "Submit Query";
+        });
+
+        // 2. Load Sessions
+        async function loadSessions() {
+            const container = document.getElementById('activeSessions');
+            try {
+                const res = await fetch(`${API_BASE_URL}/chat/sessions/${userEmail}`);
+                const sessions = await res.json();
+
+                if (sessions.length === 0) {
+                    container.innerHTML = '<p style="color: #64748b;">No active mentorship sessions yet.</p>';
+                    return;
+                }
+
+                container.innerHTML = sessions.map(s => `
+                <div class="req-card">
+                    <div>
+                        <h4 style="margin:0 0 4px 0;">${s.title}</h4>
+                        <p style="margin:0; font-size:0.85rem; color:#64748b;">Guide: ${s.guide_name} • ${s.field}</p>
+                    </div>
+                    <a href="chat.html?session=${s.id}" class="chat-btn">Open Chat</a>
+                </div>
+            `).join('');
+
+            } catch (err) {
+                container.innerHTML = '<p style="color: red;">Error loading sessions.</p>';
+            }
+        }
+
+        loadSessions();
+    </script>
+
+</body>
+
+</html>

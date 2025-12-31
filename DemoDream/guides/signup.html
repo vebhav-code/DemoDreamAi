@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Signup | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Join as a Guide</h1>
+                <p>Share your wisdom and shape the future of talent.</p>
+            </div>
+
+            <form id="guideSignupForm" class="guide-form">
+                <!-- Personal Info -->
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="fullName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="john@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label>Primary Domain</label>
+                    <select id="primaryDomain" required>
+                        <option value="">Select Domain</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Product Management">Product Management</option>
+                        <option value="UI/UX Design">UI/UX Design</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Professional Info -->
+                <div class="form-group">
+                    <label>Years of Experience</label>
+                    <input type="number" id="yearsExperience" placeholder="e.g. 5" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Current Role / Org</label>
+                    <input type="text" id="currentRole" placeholder="Senior Engineer at Google" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>LinkedIn or Portfolio URL</label>
+                    <input type="url" id="linkedinUrl" placeholder="https://linkedin.com/in/johndoe" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Short Bio</label>
+                    <textarea id="bio" rows="3"
+                        placeholder="Tell us about your background and what you love about mentoring..."
+                        required></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Weekly Availability</label>
+                    <input type="text" id="availability" placeholder="e.g. Mon-Wed 6 PM - 8 PM" required>
+                </div>
+
+                <button type="submit" class="guide-btn" id="submitBtn">Create Guide Account</button>
+            </form>
+
+            <div class="auth-footer">
+                Already a Guide? <a href="../login.html">Login here</a>
+            </div>
+            <div class="auth-footer">
+                <a href="../join.html" style="font-size: 0.8rem; color: #94a3b8;">← Back to Role Selection</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+
+</html>

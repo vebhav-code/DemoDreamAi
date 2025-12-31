@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Career Test — DemoDream</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dropdown.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="gate.js"></script>
+</head>
+
+<body class="quiz-body">
+
+  <header class="quiz-header">
+    <div class="quiz-header-inner">
+      <div class="logo">DemoDream</div>
+      <nav class="quiz-nav">
+        <a href="index.html">Home</a>
+        <a href="career.html">Careers</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
+    <div class="header-gradient"></div>
+  </header>
+
+  <main class="quiz-main">
+    <section class="quiz-panel">
+
+      <!-- Meta -->
+      <div class="quiz-meta">
+        <h1 id="quizTitle">Career Test</h1>
+        <div id="careerBadge" class="career-badge">—</div>
+        <div id="difficultyBadge" class="difficulty-badge">BASIC</div>
+      </div>
+
+      <!-- Loader -->
+      <div id="loader" class="loader-panel">
+        <div class="spinner"></div>
+        <div class="loader-text">Preparing questions... please wait</div>
+      </div>
+
+      <!-- Quiz Area -->
+      <div id="questionsArea" class="quiz-area" style="display:none;">
+
+        <div class="progress-row">
+          <div id="progressText">Question 1 / 10</div>
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <div id="questionCards" class="card-container"></div>
+
+        <div class="controls">
+          <button id="prevBtn" class="control-btn outline">Previous</button>
+          <button id="nextBtn" class="control-btn">Next</button>
+        </div>
+
+        <div class="submit-row">
+          <button id="submitQuiz" class="submit-btn">Submit Answers</button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div id="resultPanel" class="result-panel" style="display:none;">
+        <h2 id="resultTitle">Your Score</h2>
+        <div id="resultScore" class="result-score">0%</div>
+        <div id="resultDetail" class="result-detail"></div>
+
+        <div class="result-actions">
+          <button id="retryBtn" class="outline">Retake Same Level</button>
+          <button id="nextRoundBtn" class="primary">Next Round (Adaptive)</button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="quiz-footer">
+    <div>© DemoDream</div>
+  </footer>
+
+  <script src="quiz.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

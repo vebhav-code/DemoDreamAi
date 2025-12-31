@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Careers | DemoDream</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dropdown.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="gate.js"></script>
+</head>
+
+<body class="quiz-body">
+
+    <header class="quiz-header">
+        <div class="quiz-header-inner">
+            <div class="logo">DemoDream</div>
+            <nav class="quiz-nav">
+                <a href="index.html">Home</a>
+                <a href="career.html">Careers</a>
+                <a href="profile.html">Profile</a>
+            </nav>
+            <!-- Dropdown will be injected by script.js -->
+        </div>
+        <div class="header-gradient"></div>
+    </header>
+
+    <main class="quiz-main">
+        <section class="result-container"
+            style="max-width: 1000px; width: 100%; padding: 40px; background: rgba(255,255,255,0.03); border-radius: 20px; text-align: center;">
+            <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: #f3f4f6;">My Learning Journey</h1>
+            <p style="color: #94a3b8; margin-bottom: 40px; font-size: 1.1rem;">Explore curated content for the careers
+                you've tested for.</p>
+
+            <div id="loadingMsg" style="color: #cbd5e1; font-size: 1.2rem;">Loading your careers...</div>
+
+            <div id="videoGrid"
+                style="display: none; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+                <!-- Cards will be injected here -->
+            </div>
+
+            <div id="emptyState"
+                style="display: none; flex-direction: column; align-items: center; gap: 20px; padding: 40px;">
+                <div style="font-size: 4rem;">🔍</div>
+                <h3 style="color: #e2e8f0; font-size: 1.5rem;">No Career History Found</h3>
+                <p style="color: #94a3b8; max-width: 400px; line-height: 1.6;">You haven't taken any career tests yet.
+                    Explore our career catalog and take a test to unlock personalized video recommendations.</p>
+                <a href="career.html" class="start-btn"
+                    style="text-decoration: none; display: inline-block; width: auto; padding: 12px 30px;">Explore
+                    Careers</a>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const email = localStorage.getItem("userEmail");
+            const loadingMsg = document.getElementById("loadingMsg");
+            const grid = document.getElementById("videoGrid");
+            const emptyState = document.getElementById("emptyState");
+
+            if (!email) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            try {
+                // Fetch user history
+                const response = await fetch(`http://127.0.0.1:8000/performance/${email}`);
+                const data = await response.json();
+
+                loadingMsg.style.display = "none";
+
+                if (data.history && data.history.length > 0) {
+                    // Extract unique careers
+                    const uniqueCareers = [...new Set(data.history.map(item => item.career))];
+
+                    grid.style.display = "grid";
+                    grid.innerHTML = uniqueCareers.map(career => {
+                        // Generate a search query URL for YouTube
+                        const query = encodeURIComponent(`Day in the life of a ${career} career documentary`);
+                        const ytLink = `https://www.youtube.com/results?search_query=${query}`;
+
+                        return `
+                        <div class="career-card" style="min-height: auto; text-align: left; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="height: 140px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                                <span style="font-size: 3rem;">▶️</span>
+                            </div>
+                            <h3 style="color: #f3f4f6; font-size: 1.4rem; margin-bottom: 10px;">${career}</h3>
+                            <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1;">
+                                Watch real-world insights, tutorials, and "Day in the Life" videos for ${career}s.
+                            </p>
+                            <a href="${ytLink}" target="_blank" class="start-btn" style="text-align: center; text-decoration: none; display: block; background: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);">
+                                Watch on YouTube
+                            </a>
+                        </div>
+                        `;
+                    }).join("");
+
+                } else {
+                    emptyState.style.display = "flex";
+                }
+
+            } catch (err) {
+                console.error(err);
+                loadingMsg.textContent = "Error loading your career journey. Please try again later.";
+            }
+        });
+    </script>
+</body>
+
+</html>
