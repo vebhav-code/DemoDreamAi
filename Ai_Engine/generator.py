@@ -2,7 +2,7 @@ import json
 import ollama
 import re
 
-MODEL_NAME = "gemma2:2b" # Recommended default if gemma3:1b is missing
+MODEL_NAME = "llama3.1:latest" # Verified available model
 
 def generate_questions(field, difficulty):
     prompt = f"""
