@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return `
                     <label class="option" style="display:block; margin: 8px 0;">
                         <input type="radio" 
-                            name="q${q.id}" 
+                            name="q_idx_${index}" 
                             value="${optionLetter}">
                         ${trimmedOpt}
                     </label>
@@ -99,8 +99,8 @@ document.addEventListener("DOMContentLoaded", () => {
             let correct = 0;
             let answeredCount = 0;
 
-            questions.forEach(q => {
-                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q_idx_${index}"]:checked`);
                 if (selected) {
                     answeredCount++;
                     if (selected.value === q.correct_answer) {
