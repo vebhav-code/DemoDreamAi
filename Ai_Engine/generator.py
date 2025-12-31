@@ -2,8 +2,6 @@ import json
 import ollama
 import re
 
-MODEL_NAME = "llama3.1:latest" # Verified available model
-
 def generate_questions(field, difficulty):
     prompt = f"""
 Generate 10 multiple-choice questions for the career field: "{field}".
@@ -33,10 +31,10 @@ IMPORTANT:
 
     try:
         response = ollama.generate(
-            model=MODEL_NAME,
+            model="gemma3:1b",
             prompt=prompt,
             options={
-                "temperature": 0.5 
+                "temperature": 0.5 # Lower temp for more deterministic formatting
             }
         )
 
@@ -155,14 +153,17 @@ If career analysis is NOT complete yet, ask the NEXT BEST question only.
 """
     messages = [{"role": "system", "content": system_prompt}]
     
+    # Append history
+    # History is expected to be [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]
     if history:
         messages.extend(history)
         
+    # Append current message
     messages.append({"role": "user", "content": user_message})
 
     try:
         response = ollama.chat(
-            model=MODEL_NAME,
+            model="gemma3:1b", # Using a slightly larger/better model if possible, or stick to what was there. 1b might be weak for complex logic. Let's use 1b as it was there.
             messages=messages,
             options={"temperature": 0.7}
         )
@@ -190,7 +191,7 @@ def generate_daily_task(phase, day, career_interest="General Career Success"):
     """
     try:
         response = ollama.generate(
-            model=MODEL_NAME,
+            model="gemma3:1b",
             prompt=prompt,
             options={"temperature": 0.8}
         )
@@ -218,7 +219,7 @@ def grade_submission(task, submission):
     """
     try:
         response = ollama.generate(
-            model=MODEL_NAME,
+            model="gemma3:1b",
             prompt=prompt,
             options={"temperature": 0.3}
         )
@@ -279,7 +280,7 @@ def generate_project_roadmap(description, tech_preference, skill_level):
     """
     try:
         response = ollama.generate(
-            model=MODEL_NAME,
+            model="gemma3:1b",
             prompt=prompt,
             options={"temperature": 0.7}
         )
@@ -390,10 +391,11 @@ SITUATION DESIGN RULES
 
     try:
         response = ollama.chat(
-            model=MODEL_NAME, 
+            model="gemma3:1b", 
             messages=messages,
             options={"temperature": 0.7}
         )
         return response['message']['content']
     except Exception as e:
         return f"Simulation Error: {str(e)}"
+

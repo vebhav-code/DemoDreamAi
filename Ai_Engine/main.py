@@ -8,8 +8,6 @@ import models
 from database import engine, get_db, init_db
 from generator import generate_questions, chat_response, generate_daily_task, grade_submission, generate_project_roadmap, generate_simulation_response
 from guide_system import router as guide_router
-import json
-from sqlalchemy.exc import IntegrityError
 
 # Initialize Database
 init_db()
@@ -71,37 +69,12 @@ async def signup(user: UserSignup, db: Session = Depends(get_db)):
         name=user.name,
         email=user.email,
         password=user.password, # Plaintext for demo
-        username=user.email, # Use email as username for uniqueness
+        username=user.name,
         role=user.role
     )
-    try:
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-
-        # If guide, create profile entry
-        if user.role == "guide":
-            profile = models.GuideProfile(user_id=new_user.id)
-            db.add(profile)
-            
-            # Also create an entry in the primary 'guides' table for discovery
-            guide = models.Guide(
-                user_id=new_user.id,
-                full_name=user.name,
-                email=user.email,
-                password=user.password,
-                verified=False
-            )
-            db.add(guide)
-            db.commit()
-
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(status_code=400, detail="Registration failed. Email or Username might already exist.")
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=f"Internal error: {str(e)}")
-        
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
     return {"message": "User created successfully"}
 
 @app.post("/login")
@@ -195,6 +168,7 @@ async def guide_onboard(data: GuideUpdate, db: Session = Depends(get_db)):
          db.add(profile)
     
     # Update Fields
+    import json
     profile.expertise_fields = json.dumps(data.expertise_fields)
     profile.linkedin_url = data.linkedin_url
     profile.is_onboarded = True # Mark as done for this demo
@@ -231,6 +205,7 @@ async def get_available_requests(email: str, db: Session = Depends(get_db)):
     guide_profile = db.query(models.GuideProfile).filter(models.GuideProfile.user_id == user.id).first()
     if not guide_profile: return []
     
+    import json
     try:
         expertise = json.loads(guide_profile.expertise_fields) if guide_profile.expertise_fields else []
     except:
@@ -267,11 +242,6 @@ async def accept_mentorship_request(data: AcceptRequest, db: Session = Depends(g
     guide = db.query(models.User).filter(models.User.email == data.guide_email).first()
     req = db.query(models.MentorshipRequest).filter(models.MentorshipRequest.id == data.request_id).first()
     
-    if not req:
-        raise HTTPException(status_code=404, detail="Mentorship request not found")
-    if not guide:
-        raise HTTPException(status_code=404, detail="Guide not found")
-        
     if req.status != "open":
         raise HTTPException(status_code=400, detail="Request already accepted or closed")
     
@@ -297,10 +267,10 @@ async def get_user_chat_sessions(email: str, db: Session = Depends(get_db)):
     
     return [{
         "id": s.id,
-        "explorer_name": s.explorer.name if s.explorer else "Unknown",
-        "guide_name": s.guide.name if s.guide else "Unknown",
-        "field": s.request.field if s.request else "General",
-        "title": s.request.title if s.request else "Chat Session"
+        "explorer_name": s.explorer.name,
+        "guide_name": s.guide.name,
+        "field": s.request.field,
+        "title": s.request.title
     } for s in sessions]
 
 class MessageSend(BaseModel):
@@ -374,6 +344,7 @@ async def start_daily_task(email: str, db: Session = Depends(get_db)):
     task_data = generate_daily_task(progress.current_phase, progress.current_day)
     
     # Store as string (JSON dumps)
+    import json
     progress.current_task = json.dumps(task_data)
     progress.day_status = "pending"
     progress.submission_text = None
@@ -584,6 +555,7 @@ async def verify_guide(data: VerifyAction, db: Session = Depends(get_db)):
     return {"message": f"Guide {data.action}d successfully"}
 
 # --- MyDreamProject System ---
+import json
 
 class DreamProjectCreate(BaseModel):
     email: str

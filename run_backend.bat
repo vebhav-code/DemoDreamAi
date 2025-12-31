@@ -7,7 +7,7 @@ echo.
 
 :: 1. Start Ollama Model in a separate window
 echo [1/2] Launching AI Brain (Ollama)...
-start "Ollama Model Service" cmd /k "ollama run llama3.1:latest"
+start "Ollama Model Service" cmd /k "ollama run gemma3:1b"
 
 :: 2. Wait a moment to ensure terminal opens
 timeout /t 2 /nobreak >nul

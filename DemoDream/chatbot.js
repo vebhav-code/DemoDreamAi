@@ -124,31 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function appendMessage(text, sender, isLoading = false) {
         const msgDiv = document.createElement("div");
         msgDiv.className = `message ${sender}`;
-
-        // Handle Markdown-style newlines and bolding
-        if (sender === "bot") {
-            let formattedText = text
-                .replace(/\n/g, '<br>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>');
-            msgDiv.innerHTML = formattedText;
-        } else {
-            msgDiv.textContent = text;
-        }
-
-        if (isLoading) {
-            msgDiv.id = "chatLoading-" + Date.now();
-            msgDiv.innerHTML = '<div class="typing-dots"><span>.</span><span>.</span><span>.</span></div>';
-        }
+        msgDiv.textContent = text;
+        if (isLoading) msgDiv.id = "chatLoading-" + Date.now();
 
         messages.appendChild(msgDiv);
-
-        // Smooth scroll to bottom
-        messages.scrollTo({
-            top: messages.scrollHeight,
-            behavior: 'smooth'
-        });
-
+        messages.scrollTop = messages.scrollHeight;
         return msgDiv.id;
     }
 });

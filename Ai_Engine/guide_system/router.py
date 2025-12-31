@@ -38,38 +38,33 @@ async def register_guide(data: GuideSignup, db: Session = Depends(get_db)):
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already in use")
     
-    try:
-        # Create Base User
-        user = models.User(
-            name=data.full_name,
-            email=data.email,
-            password=data.password,
-            username=data.email, # Use email as username for uniqueness
-            role="guide"
-        )
-        db.add(user)
-        db.flush() # Get user ID
-        
-        # Create Independent Guide Record
-        guide = models.Guide(
-            user_id=user.id,
-            full_name=data.full_name,
-            email=data.email,
-            password=data.password,
-            primary_domain=data.primary_domain,
-            years_experience=data.years_experience,
-            current_role=data.current_role,
-            organization=data.organization,
-            linkedin_portfolio_url=data.linkedin_portfolio_url,
-            bio=data.bio,
-            weekly_availability=data.weekly_availability,
-            verified=False
-        )
-        db.add(guide)
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=400, detail=f"Guide registration failed: {str(e)}")
+    # Create Base User
+    user = models.User(
+        name=data.full_name,
+        email=data.email,
+        password=data.password,
+        role="guide"
+    )
+    db.add(user)
+    db.flush() # Get user ID
+    
+    # Create Independent Guide Record
+    guide = models.Guide(
+        user_id=user.id,
+        full_name=data.full_name,
+        email=data.email,
+        password=data.password,
+        primary_domain=data.primary_domain,
+        years_experience=data.years_experience,
+        current_role=data.current_role,
+        organization=data.organization,
+        linkedin_portfolio_url=data.linkedin_portfolio_url,
+        bio=data.bio,
+        weekly_availability=data.weekly_availability,
+        verified=False
+    )
+    db.add(guide)
+    db.commit()
     
     return {"message": "Guide account created successfully. Awaiting verification."}
 
